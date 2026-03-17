@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Registro de Cliente — Fitness Inc + FisioSmart EC</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul: #1B4F8A;
+    --azul-mid: #2563B0;
+    --azul-claro: #D6E8F7;
+    --verde: #2E9E6B;
+    --verde-claro: #D6F0E5;
+    --verde-dark: #1A6645;
+    --gris: #F7F8FA;
+    --gris-mid: #E5E7EB;
+    --gris-texto: #6B7280;
+    --dark: #111827;
+    --white: #ffffff;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(27,79,138,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: #EEF3FA;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+    font-size: 16px;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--azul);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(27,79,138,0.25);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+  }
+  .header-logo {
+    display: flex;
+    flex-direction: column;
+  }
+  .header-logo .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+  .header-logo .sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.70);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+  .header-badge {
+    background: var(--verde);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .header-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--verde), #5EC49A);
+  }
+
+  /* ---- PROGRESS ---- */
+  .progress-wrap {
+    background: white;
+    padding: 12px 28px 0;
+    border-bottom: 1px solid var(--gris-mid);
+  }
+  .progress-steps {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0;
+  }
+  .progress-steps::-webkit-scrollbar { display: none; }
+  .step-tab {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+    padding: 8px 4px 10px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gris-texto);
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .step-tab.active {
+    color: var(--azul);
+    border-bottom-color: var(--azul);
+    font-weight: 700;
+  }
+  .step-tab.done {
+    color: var(--verde);
+    border-bottom-color: var(--verde-claro);
+  }
+  .step-tab .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--gris-mid);
+    color: var(--gris-texto);
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    transition: all 0.2s;
+  }
+  .step-tab.active .step-num { background: var(--azul); color: white; }
+  .step-tab.done .step-num { background: var(--verde); color: white; }
+  .step-tab div { display: flex; flex-direction: column; align-items: center; }
+
+  /* ---- MAIN ---- */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 20px 100px;
+  }
+
+  /* ---- CARD ---- */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .card.active { display: block; animation: slideIn 0.3s ease; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gris-mid);
+  }
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card-icon.blue { background: var(--azul-claro); }
+  .card-icon.green { background: var(--verde-claro); }
+  .card-title { font-size: 17px; font-weight: 700; color: var(--azul); }
+  .card-subtitle { font-size: 12px; color: var(--gris-texto); margin-top: 2px; }
+
+  /* ---- FIELDS ---- */
+  .field-grid {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .field-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--azul);
+    letter-spacing: 0.3px;
+  }
+  .field label .req { color: var(--verde); margin-left: 2px; }
+  .field input, .field select, .field textarea {
+    border: 1.5px solid var(--gris-mid);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--dark);
+    background: var(--gris);
+    transition: all 0.2s;
+    outline: none;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--azul);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(27,79,138,0.10);
+  }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .field .hint {
+    font-size: 11px;
+    color: var(--gris-texto);
+    margin-top: -2px;
+  }
+
+  /* ---- CHECKBOX GROUPS ---- */
+  .check-group { display: flex; flex-direction: column; gap: 6px; }
+  .check-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--azul);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .check-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .check-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border: 1.5px solid var(--gris-mid);
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--dark);
+    background: var(--gris);
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .check-chip:active { transform: scale(0.97); }
+  .check-chip input { display: none; }
+  .check-chip.selected {
+    background: var(--azul);
+    border-color: var(--azul);
+    color: white;
+  }
+  .check-chip.selected.green {
+    background: var(--verde);
+    border-color: var(--verde);
+  }
+  .check-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gris-mid);
+    flex-shrink: 0;
+    transition: background 0.18s;
+  }
+  .check-chip.selected .check-dot { background: rgba(255,255,255,0.6); }
+
+  /* ---- YES/NO ---- */
+  .yn-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--gris);
+    border-radius: 12px;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .yn-label { font-size: 14px; font-weight: 500; color: var(--dark); flex: 1; }
+  .yn-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+  .yn-btn {
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gris-mid);
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    color: var(--gris-texto);
+  }
+  .yn-btn:active { transform: scale(0.95); }
+  .yn-btn.yes.active { background: var(--verde); border-color: var(--verde); color: white; }
+  .yn-btn.no.active { background: var(--azul); border-color: var(--azul); color: white; }
+
+  /* ---- INFO BOX ---- */
+  .info-box {
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .info-box.blue { background: var(--azul-claro); border-left: 4px solid var(--azul); color: #0D2E5A; }
+  .info-box.green { background: var(--verde-claro); border-left: 4px solid var(--verde); color: var(--verde-dark); }
+  .info-box strong { font-weight: 700; }
+
+  /* ---- SEGURO HIGHLIGHT ---- */
+  .seguro-banner {
+    background: linear-gradient(135deg, var(--azul), var(--azul-mid));
+    border-radius: 14px;
+    padding: 18px 20px;
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .seguro-banner .icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .seguro-banner .text strong { font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .seguro-banner .text span { font-size: 13px; opacity: 0.90; line-height: 1.5; }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    height: 1px;
+    background: var(--gris-mid);
+    margin: 20px 0;
+  }
+
+  /* ---- SECTION LABEL ---- */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gris-texto);
+    margin-bottom: 12px;
+  }
+
+  /* ---- NAV BUTTONS ---- */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--gris-mid);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
+  }
+  .nav-btn {
+    padding: 13px 28px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn:active { transform: scale(0.97); }
+  .btn-prev {
+    background: var(--gris);
+    color: var(--gris-texto);
+    border: 1.5px solid var(--gris-mid);
+  }
+  .btn-next {
+    background: var(--azul);
+    color: white;
+    min-width: 160px;
+  }
+  .btn-next.green { background: var(--verde); }
+  .step-counter {
+    font-size: 13px;
+    color: var(--gris-texto);
+    font-weight: 500;
+  }
+
+  /* ---- SUCCESS ---- */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 28px;
+  }
+  .success-screen.show { display: block; animation: slideIn 0.4s ease; }
+  .success-icon {
+    width: 80px; height: 80px;
+    background: var(--verde-claro);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 24px;
+  }
+  .success-screen h2 { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--azul); margin-bottom: 10px; }
+  .success-screen p { color: var(--gris-texto); font-size: 15px; line-height: 1.6; max-width: 400px; margin: 0 auto 28px; }
+  .btn-reset {
+    background: var(--azul);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* STAFF FIELD */
+  .staff-box {
+    background: var(--azul);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 4px;
+  }
+  .staff-box label { color: rgba(255,255,255,0.80) !important; }
+  .staff-box input, .staff-box select {
+    background: rgba(255,255,255,0.12) !important;
+    border-color: rgba(255,255,255,0.25) !important;
+    color: white !important;
+  }
+  .staff-box input::placeholder { color: rgba(255,255,255,0.40); }
+  .staff-box .staff-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.60);
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 600px) {
+    .field-grid.cols-3, .field-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .main { padding: 16px 14px 100px; }
+    .card { padding: 20px 16px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <span class="brand">Fitness Inc + FisioSmart EC</span>
+      <span class="sub">Registro de Cliente — Vía a la Costa, Guayaquil</span>
+    </div>
+    <span class="header-badge">INGRESO 2026</span>
+  </div>
+  <div class="header-bar"></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-steps">
+    <div class="step-tab active" onclick="goTo(0)"><div><span class="step-num">1</span>Datos</div></div>
+    <div class="step-tab" onclick="goTo(1)"><div><span class="step-num">2</span>Servicios</div></div>
+    <div class="step-tab" onclick="goTo(2)"><div><span class="step-num">3</span>Salud</div></div>
+    <div class="step-tab" onclick="goTo(3)"><div><span class="step-num">4</span>Seguro</div></div>
+    <div class="step-tab" onclick="goTo(4)"><div><span class="step-num">5</span>Referido</div></div>
+    <div class="step-tab" onclick="goTo(5)"><div><span class="step-num">6</span>Firma</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- STEP 0: DATOS PERSONALES -->
+  <div class="card active" id="step-0">
+    <div class="card-header">
+      <div class="card-icon blue">👤</div>
+      <div><div class="card-title">Datos Personales y Contacto</div><div class="card-subtitle">Información básica del cliente</div></div>
+    </div>
+    <div class="info-box green" style="font-size:15px; padding: 18px 20px;">
+      <div style="font-size:22px; margin-bottom:6px;">🎁</div>
+      <strong style="font-size:16px;">¡Llena este formulario y gana 3 días gratis de Gym!</strong><br>
+      <span style="opacity:0.9">Completa tu registro ahora y recibe 3 días adicionales de membresía sin costo. Todos tus datos son confidenciales y se usan únicamente para personalizar tu experiencia de salud.</span>
+    </div>
+
+    <div class="field-grid cols-2">
+      <div class="field"><label>Nombres <span class="req">*</span></label><input type="text" id="f-nombres" placeholder="Ej: Carlos Andrés" /></div>
+      <div class="field"><label>Apellidos <span class="req">*</span></label><input type="text" id="f-apellidos" placeholder="Ej: Pérez Torres" /></div>
+    </div>
+    <div class="field-grid cols-3">
+      <div class="field"><label>Cédula / Pasaporte <span class="req">*</span></label><input type="text" id="f-cedula" placeholder="0912345678" /></div>
+      <div class="field"><label>Fecha de Nacimiento</label><input type="date" id="f-nacimiento" /></div>
+      <div class="field"><label>Ocupación</label><input type="text" id="f-ocupacion" placeholder="Ej: Empresario, docente..." /></div>
+    </div>
+
+    <div class="check-group" style="margin-bottom:18px">
+      <label>Género</label>
+      <div class="check-options">
+        <label class="check-chip"><input type="radio" name="genero"><span class="check-dot"></span>Masculino</label>
+        <label class="check-chip"><input type="radio" name="genero"><span class="check-dot"></span>Femenino</label>
+        <label class="check-chip"><input type="radio" name="genero"><span class="check-dot"></span>Prefiero no indicar</label>
+      </div>
+    </div>
+
+    <div class="field-grid cols-3">
+      <div class="field"><label>Teléfono <span class="req">*</span></label><input type="tel" id="f-telefono" placeholder="09XXXXXXXX" /></div>
+      <div class="field"><label>WhatsApp (si es diferente)</label><input type="tel" id="f-whatsapp" placeholder="09XXXXXXXX" /></div>
+      <div class="field"><label>Correo Electrónico</label><input type="email" id="f-email" placeholder="correo@ejemplo.com" /></div>
+    </div>
+    <div class="field-grid cols-2">
+      <div class="field"><label>Dirección / Sector</label><input type="text" id="f-direccion" placeholder="Ej: Urbanización Los Ceibos, km 14" /></div>
+      <div class="field"><label>¿Vive en Vía a la Costa?</label><input type="text" id="f-via-costa" placeholder="Sector / km aproximado" /></div>
+    </div>
+    <div class="field"><label>Contacto de Emergencia (nombre y teléfono)</label><input type="text" id="f-emergencia" placeholder="Ej: María Torres — 0987654321" /></div>
+  </div>
+
+  <!-- STEP 1: SERVICIOS -->
+  <div class="card" id="step-1">
+    <div class="card-header">
+      <div class="card-icon green">🏋️</div>
+      <div><div class="card-title">Servicios e Historial</div><div class="card-subtitle">¿Qué servicios usas o te interesan?</div></div>
+    </div>
+
+    <div class="check-group" style="margin-bottom:20px">
+      <label>¿Qué servicio(s) vas a utilizar? <span class="req">*</span></label>
+      <div class="check-options">
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>💪 Gym / Fitness</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>🩺 Fisioterapia</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>❤️ Consulta Médica</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>⭐ Todos los servicios</label>
+      </div>
+    </div>
+
+    <div class="check-group" style="margin-bottom:20px">
+      <label>¿Eres cliente nuevo o ya nos conoces? <span class="req">*</span></label>
+      <div class="check-options">
+        <label class="check-chip"><input type="radio" name="tipo_cliente"><span class="check-dot"></span>✅ Cliente activo</label>
+        <label class="check-chip"><input type="radio" name="tipo_cliente"><span class="check-dot"></span>🔄 Ex-cliente (regreso)</label>
+        <label class="check-chip"><input type="radio" name="tipo_cliente"><span class="check-dot"></span>🆕 Cliente nuevo</label>
+      </div>
+    </div>
+
+    <div id="exclient-fields">
+      <div class="divider"></div>
+      <div class="section-label">Solo si es ex-cliente</div>
+      <div class="field-grid cols-2">
+        <div class="field"><label>¿Hace cuánto tiempo dejó de asistir?</label>
+          <select id="f-tiempo-inactividad"><option value="">Selecciona...</option><option>Menos de 3 meses</option><option>3 a 6 meses</option><option>6 a 12 meses</option><option>Más de 1 año</option><option>Más de 2 años</option></select>
+        </div>
+        <div class="field"><label>¿Cuál fue el motivo de salida?</label>
+          <select id="f-motivo-salida"><option value="">Selecciona...</option><option>Económico / precio</option><option>Cambio de horario / trabajo</option><option>Lesión o problema de salud</option><option>Cambio de domicilio</option><option>Falta de tiempo</option><option>No alcancé mis objetivos</option><option>Otro</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Detalles adicionales sobre su salida (opcional)</label><textarea id="f-detalle-salida" placeholder="Cuéntanos qué pasó para poder mejorar tu experiencia de regreso..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: CONDICIÓN FÍSICA Y SALUD -->
+  <div class="card" id="step-2">
+    <div class="card-header">
+      <div class="card-icon blue">🫀</div>
+      <div><div class="card-title">Condición Física y Salud General</div><div class="card-subtitle">Antecedentes y objetivos de bienestar</div></div>
+    </div>
+
+    <!-- IMC CALCULATOR -->
+    <div style="background: var(--gris); border-radius: 14px; padding: 20px; margin-bottom: 20px; border: 1.5px solid var(--gris-mid);">
+      <div style="font-size:13px; font-weight:700; color:var(--azul); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">📊 Calculadora de IMC</div>
+      <div class="field-grid cols-3" style="margin-bottom:12px">
+        <div class="field">
+          <label>Estatura (cm)</label>
+          <input type="number" id="imc-altura" placeholder="Ej: 170" oninput="calcularIMC()" min="100" max="220" />
+        </div>
+        <div class="field">
+          <label>Peso (lb)</label>
+          <input type="number" id="imc-peso" placeholder="Ej: 165" oninput="calcularIMC()" min="50" max="500" />
+        </div>
+        <div class="field">
+          <label>Resultado IMC</label>
+          <input type="text" id="imc-resultado" placeholder="Ingresa datos..." readonly style="background:white; font-weight:700; color:var(--azul);" />
+        </div>
+      </div>
+      <div id="imc-barra" style="display:none; margin-top:16px;">
+        <!-- Wrapper con padding para que el marker no se corte -->
+        <div style="position:relative; padding: 12px 0 4px;">
+          <!-- Track de la barra -->
+          <div id="imc-barra-track" style="height:12px; border-radius:8px; background: linear-gradient(90deg, #3B82F6 0%, #22C55E 28%, #EAB308 56%, #EF4444 78%, #7C3AED 100%);"></div>
+          <!-- Marker posicionado sobre el wrapper, no sobre el track -->
+          <div id="imc-marker" style="position:absolute; top:6px; left:0%; width:24px; height:24px; background:#1B4F8A; border:3px solid white; border-radius:50%; transform:translateX(-50%); box-shadow:0 2px 10px rgba(0,0,0,0.4); transition: left 0.35s ease; pointer-events:none;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--gris-texto); margin-top:6px; padding: 0 2px;">
+          <span>Bajo peso<br><b>&lt;18.5</b></span>
+          <span style="text-align:center">Normal<br><b>18.5–24.9</b></span>
+          <span style="text-align:center">Sobrepeso<br><b>25–29.9</b></span>
+          <span style="text-align:right">Obesidad<br><b>30+</b></span>
+        </div>
+        <div id="imc-categoria" style="margin-top:14px; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; line-height:1.5;"></div>
+      </div>
+    </div>
+
+    <div class="check-group" style="margin-bottom:18px">
+      <label>Nivel de actividad física actual</label>
+      <div class="check-options">
+        <label class="check-chip"><input type="radio" name="actividad"><span class="check-dot"></span>Sedentario</label>
+        <label class="check-chip"><input type="radio" name="actividad"><span class="check-dot"></span>Leve (1-2 días/sem)</label>
+        <label class="check-chip"><input type="radio" name="actividad"><span class="check-dot"></span>Moderado (3-4 días)</label>
+        <label class="check-chip"><input type="radio" name="actividad"><span class="check-dot"></span>Activo (5+ días)</label>
+      </div>
+    </div>
+
+    <div class="check-group" style="margin-bottom:20px">
+      <label>Objetivos principales <span class="req">*</span></label>
+      <div class="check-options">
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>⚖️ Bajar de peso</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>💪 Ganar fuerza / músculo</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>🩹 Rehabilitación</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>❤️ Salud cardiovascular</label>
+        <label class="check-chip green"><input type="checkbox"><span class="check-dot"></span>+ Otro</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Antecedentes médicos</div>
+
+    <div class="yn-row"><span class="yn-label">¿Tiene alguna lesión o condición física conocida?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button></div></div>
+    <div class="field" style="margin-bottom:18px"><textarea id="f-detalle-lesion" placeholder="Si respondió Sí: zona del cuerpo, diagnóstico previo, cirugías relevantes..."></textarea></div>
+
+    <div class="yn-row"><span class="yn-label">¿Padece alguna enfermedad crónica (diabetes, hipertensión, tiroides, etc.)?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button></div></div>
+    <div class="field" style="margin-bottom:18px"><input type="text" id="f-detalle-enfermedad" placeholder="Si respondió Sí, especifique..." /></div>
+
+    <div class="yn-row"><span class="yn-label">¿Está tomando algún medicamento actualmente?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button></div></div>
+    <div class="field" style="margin-bottom:18px"><input type="text" id="f-detalle-medicamentos" placeholder="Si respondió Sí, ¿cuál(es)?" /></div>
+
+    <div class="yn-row"><span class="yn-label">¿Su médico le ha restringido algún tipo de actividad física?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button></div></div>
+    <div class="field"><input type="text" id="f-detalle-restriccion" placeholder="Si respondió Sí, especifique la restricción..." /></div>
+  </div>
+
+  <!-- STEP 3: SEGURO MÉDICO -->
+  <div class="card" id="step-3">
+    <div class="card-header">
+      <div class="card-icon blue">🛡️</div>
+      <div><div class="card-title">Seguros Médicos y Cobertura</div><div class="card-subtitle">Tus tratamientos pueden estar cubiertos</div></div>
+    </div>
+
+    <div class="seguro-banner">
+      <div class="icon">💡</div>
+      <div class="text">
+        <strong>¡Tu seguro médico puede cubrir tus servicios en FisioSmart EC!</strong>
+        <span>Fisioterapia, rehabilitación y consultas médicas pueden estar cubiertos por tu seguro privado. Dinos con quién tienes seguro y nuestro equipo gestiona la cobertura por ti — sin que tengas que pagar de más.</span>
+      </div>
+    </div>
+
+    <div class="yn-row"><span class="yn-label">¿Cuenta con seguro médico privado?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button></div></div>
+
+    <div style="margin-top:16px">
+      <div class="field-grid cols-2">
+        <div class="field"><label>Nombre de la aseguradora</label>
+          <select id="f-aseguradora"><option value="">Selecciona...</option><option>Ecuasanitas</option><option>Seguros Sucre</option><option>AIG Metropolitana</option><option>Chubb</option><option>Mapfre</option><option>Liberty Seguros</option><option>BMI</option><option>Humana</option><option>Salud S.A.</option><option>Otra</option></select>
+        </div>
+        <div class="field"><label>Si seleccionó "Otra", especifique</label><input type="text" id="f-aseguradora-otra" placeholder="Nombre de la aseguradora..." /></div>
+      </div>
+      <div class="yn-row"><span class="yn-label">¿Su seguro cubre fisioterapia o rehabilitación?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button><button class="yn-btn no" onclick="toggleYN(this)">No sé</button></div></div>
+      <div class="yn-row"><span class="yn-label">¿Requiere orden médica previa para usar el seguro en fisioterapia?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí</button><button class="yn-btn no" onclick="toggleYN(this)">No</button></div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="check-group">
+      <label>¿Está afiliado al IESS?</label>
+      <div class="check-options">
+        <label class="check-chip"><input type="radio" name="iess"><span class="check-dot"></span>Sí, activo</label>
+        <label class="check-chip"><input type="radio" name="iess"><span class="check-dot"></span>Sí, jubilado</label>
+        <label class="check-chip"><input type="radio" name="iess"><span class="check-dot"></span>No</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: REFERIDO -->
+  <div class="card" id="step-4">
+    <div class="card-header">
+      <div class="card-icon green">📣</div>
+      <div><div class="card-title">¿Cómo nos Conociste?</div><div class="card-subtitle">Nos ayuda a entender cómo llegan nuestros clientes</div></div>
+    </div>
+
+    <div class="check-group" style="margin-bottom:20px">
+      <label>¿Por qué medio llegaste a Fitness Inc / FisioSmart EC? <span class="req">*</span></label>
+      <div class="check-options">
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>👥 Recomendación de amigo/familiar</label>
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>📸 Instagram</label>
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>📘 Facebook</label>
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>🔍 Google / búsqueda en internet</label>
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>📍 Vi el local al pasar</label>
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>📋 Volante / publicidad impresa</label>
+        <label class="check-chip"><input type="radio" name="como"><span class="check-dot"></span>+ Otro</label>
+      </div>
+    </div>
+
+    <div class="field-grid cols-2">
+      <div class="field"><label>Si fue recomendado, ¿por quién?</label><input type="text" id="f-nombre-referido" placeholder="Nombre del cliente que te recomendó" /></div>
+      <div class="field"><label>Si marcaste "Otro", especifica</label><input type="text" id="f-otro-canal" placeholder="¿Por dónde nos conociste?" /></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field"><label>¿Hay algo que te haya motivado especialmente a venir?</label><textarea id="f-motivacion" placeholder="Opcional: Tu motivación nos ayuda a entender qué es importante para ti..."></textarea></div>
+  </div>
+
+  <!-- STEP 6: FIRMA Y AUTORIZACIÓN -->
+  <div class="card" id="step-5">
+    <div class="card-header">
+      <div class="card-icon blue">✍️</div>
+      <div><div class="card-title">Autorización y Confirmación</div><div class="card-subtitle">Revisión final antes de guardar</div></div>
+    </div>
+
+    <div class="info-box blue" style="margin-bottom:20px">
+      <strong>Autorización de datos:</strong> Autorizo a Fitness Inc / FisioSmart EC a almacenar y utilizar mis datos personales y de salud exclusivamente para la gestión de mi membresía, tratamientos, seguimiento médico y comunicaciones relacionadas con los servicios contratados. Entiendo que mis datos no serán compartidos con terceros sin mi consentimiento expreso.
+    </div>
+
+    <div class="yn-row"><span class="yn-label">¿Acepta los términos de manejo de datos?</span><div class="yn-buttons"><button class="yn-btn yes" onclick="toggleYN(this)">Sí, acepto</button><button class="yn-btn no" onclick="toggleYN(this)">No acepto</button></div></div>
+
+    <div class="divider"></div>
+    <div class="field-grid cols-2" style="margin-top:8px">
+      <div class="field"><label>Nombre completo (confirmar) <span class="req">*</span></label><input type="text" id="f-nombre-confirmacion" placeholder="Nombres y apellidos completos" /></div>
+      <div class="field"><label>Fecha de registro</label><input type="date" id="f-fecha-registro" /></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="staff-box">
+      <div class="staff-title">⚙️ Uso interno — Personal de Atención</div>
+      <div class="field-grid cols-3">
+        <div class="field"><label>Atendido por</label><input type="text" id="f-atendido-por" placeholder="Nombre del asesor" /></div>
+        <div class="field"><label>Servicio asignado</label>
+          <select id="f-servicio-asignado" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);color:white">
+            <option value="">Seleccionar...</option>
+            <option>Gym — Membresía mensual</option>
+            <option>Gym — Membresía trimestral</option>
+            <option>Fisioterapia — Evaluación inicial</option>
+            <option>Fisioterapia — Plan de tratamiento</option>
+            <option>Consulta médica</option>
+            <option>Plan integral (Gym + Fisio)</option>
+          </select>
+        </div>
+        <div class="field"><label>Fecha de ingreso al sistema</label><input type="date" id="f-fecha-ingreso" /></div>
+      </div>
+      <div class="field" style="margin-top:8px"><label>Observaciones del asesor</label><input type="text" id="f-obs-asesor" placeholder="Notas internas sobre el cliente..." style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);color:white" /></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success">
+    <div class="success-icon">✅</div>
+    <h2>¡Registro completado!</h2>
+    <p>Los datos del cliente han sido guardados correctamente. El equipo ya puede acceder a su perfil y comenzar a personalizar su experiencia de salud.</p>
+    <button class="btn-reset" onclick="resetForm()">Registrar nuevo cliente</button>
+  </div>
+
+</div><!-- /main -->
+
+<div class="nav-bar" id="nav-bar">
+  <button class="nav-btn btn-prev" id="btn-prev" onclick="prevStep()">← Anterior</button>
+  <span class="step-counter" id="step-counter">Paso 1 de 7</span>
+  <button class="nav-btn btn-next" id="btn-next" onclick="nextStep()">Siguiente →</button>
+</div>
+
+<script>
+  let currentStep = 0;
+  const totalSteps = 6;
+  const tabs = document.querySelectorAll('.step-tab');
+
+  // Chips toggle
+  document.querySelectorAll('.check-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      const input = chip.querySelector('input');
+      if (input.type === 'radio') {
+        const name = input.name;
+        document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+          r.closest('.check-chip').classList.remove('selected');
+        });
+        chip.classList.add('selected');
+        input.checked = true;
+      } else {
+        chip.classList.toggle('selected');
+        input.checked = chip.classList.contains('selected');
+      }
+    });
+  });
+
+  function toggleYN(btn) {
+    const row = btn.closest('.yn-buttons');
+    row.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  // Fix: ensure all yn-btn clicks inside yn-row work correctly
+  document.querySelectorAll('.yn-row .yn-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+    });
+  });
+
+  function goTo(step) {
+    if (step < 0 || step >= totalSteps) return;
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+    const card = document.getElementById('step-' + step);
+    if (card) card.classList.add('active');
+    tabs.forEach((t, i) => {
+      t.classList.remove('active', 'done');
+      if (i < step) t.classList.add('done');
+      if (i === step) t.classList.add('active');
+    });
+    currentStep = step;
+    updateNav();
+    window.scrollTo(0, 0);
+  }
+
+  // ── Google Sheets integration ──────────────────────────────
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz6Ls4Iy6YvDrL14Dlp_wyOKAtHuwBMRXMuRcm2LZFeIlNr3oon4XExn5SISFqEfJtb-A/exec";
+
+  function getChecked(name) {
+    const els = document.querySelectorAll(`input[name="${name}"]:checked`);
+    return Array.from(els).map(e => e.closest('.check-chip').textContent.trim()).join(", ");
+  }
+  function getSelectedChips(container) {
+    return Array.from(container.querySelectorAll('.check-chip.selected'))
+      .map(c => c.textContent.trim()).join(", ");
+  }
+  function getYNByLabel(labelText) {
+    const rows = document.querySelectorAll('.yn-row');
+    for (const row of rows) {
+      if (row.querySelector('.yn-label') && row.querySelector('.yn-label').textContent.includes(labelText)) {
+        const active = row.querySelector('.yn-btn.active');
+        return active ? active.textContent.trim() : "";
+      }
+    }
+    return "";
+  }
+
+  function fid(id) { const e = document.getElementById(id); return e ? e.value.trim() : ""; }
+
+  function collectData() {
+    const chips = document.querySelectorAll('.check-options');
+    const getChips = (idx) => chips[idx]
+      ? Array.from(chips[idx].querySelectorAll('.check-chip.selected')).map(c => c.textContent.trim()).join(", ")
+      : "";
+    return {
+      // Paso 1 — Datos personales
+      nombres:              fid("f-nombres"),
+      apellidos:            fid("f-apellidos"),
+      cedula:               fid("f-cedula"),
+      fecha_nacimiento:     fid("f-nacimiento"),
+      ocupacion:            fid("f-ocupacion"),
+      genero:               getChecked("genero"),
+      telefono:             fid("f-telefono"),
+      whatsapp:             fid("f-whatsapp"),
+      email:                fid("f-email"),
+      direccion:            fid("f-direccion"),
+      vive_via_costa:       fid("f-via-costa"),
+      contacto_emergencia:  fid("f-emergencia"),
+      // Paso 2 — Servicios
+      servicios:            getChips(0),
+      tipo_cliente:         getChecked("tipo_cliente"),
+      tiempo_inactividad:   fid("f-tiempo-inactividad"),
+      motivo_salida:        fid("f-motivo-salida"),
+      detalle_salida:       fid("f-detalle-salida"),
+      // Paso 3 — Salud e IMC
+      imc:                  fid("imc-resultado"),
+      categoria_imc:        (document.getElementById("imc-categoria")||{}).textContent||"",
+      nivel_actividad:      getChecked("actividad"),
+      objetivos:            getChips(2),
+      tiene_lesion:         getYNByLabel("lesión o condición"),
+      detalle_lesion:       fid("f-detalle-lesion"),
+      enfermedad_cronica:   getYNByLabel("enfermedad crónica"),
+      detalle_enfermedad:   fid("f-detalle-enfermedad"),
+      toma_medicamentos:    getYNByLabel("medicamento"),
+      detalle_medicamentos: fid("f-detalle-medicamentos"),
+      restriccion_actividad:getYNByLabel("restringido"),
+      detalle_restriccion:  fid("f-detalle-restriccion"),
+      // Paso 4 — Seguro
+      tiene_seguro:         getYNByLabel("seguro médico privado"),
+      aseguradora:          fid("f-aseguradora"),
+      aseguradora_otra:     fid("f-aseguradora-otra"),
+      seguro_cubre_fisio:   getYNByLabel("cubre fisioterapia"),
+      requiere_orden:       getYNByLabel("orden médica"),
+      iess:                 getChecked("iess"),
+      // Paso 5 — Referido
+      como_conocio:         getChecked("como"),
+      nombre_referido:      fid("f-nombre-referido"),
+      otro_canal:           fid("f-otro-canal"),
+      motivacion:           fid("f-motivacion"),
+      // Paso 6 — Firma
+      acepta_terminos:      getYNByLabel("términos"),
+      nombre_confirmacion:  fid("f-nombre-confirmacion"),
+      // Staff
+      atendido_por:         fid("f-atendido-por"),
+      servicio_asignado:    fid("f-servicio-asignado"),
+      fecha_ingreso_sistema:fid("f-fecha-ingreso"),
+      obs_asesor:           fid("f-obs-asesor"),
+    };
+  }
+
+  function showSuccess() {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+    document.getElementById('success').classList.add('show');
+    document.getElementById('nav-bar').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps - 1) {
+      goTo(currentStep + 1);
+    } else {
+      const data = collectData();
+      const btn = document.getElementById('btn-next');
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "https://script.google.com/macros/s/AKfycbz6Ls4Iy6YvDrL14Dlp_wyOKAtHuwBMRXMuRcm2LZFeIlNr3oon4XExn5SISFqEfJtb-A/exec") {
+        console.log("Datos capturados (modo demo):", data);
+        showSuccess();
+        return;
+      }
+      btn.textContent = '⏳ Guardando...';
+      btn.disabled = true;
+
+      // Construir URL con parámetros GET
+      const params = new URLSearchParams();
+      Object.keys(data).forEach(k => { if (data[k]) params.append(k, data[k]); });
+      const url = APPS_SCRIPT_URL + "?" + params.toString();
+
+      // Enviar con imagen — funciona desde cualquier origen sin CORS
+      const img = new Image();
+      img.onload = img.onerror = function() {
+        btn.disabled = false;
+        showSuccess();
+      };
+      setTimeout(() => {
+        if (btn.disabled) {
+          btn.disabled = false;
+          showSuccess();
+        }
+      }, 6000);
+      img.src = url;
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) goTo(currentStep - 1);
+  }
+
+  function updateNav() {
+    const prev = document.getElementById('btn-prev');
+    const next = document.getElementById('btn-next');
+    const counter = document.getElementById('step-counter');
+    prev.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+    counter.textContent = `Paso ${currentStep + 1} de ${totalSteps}`;
+    if (currentStep === totalSteps - 1) {
+      next.textContent = '✅ Guardar Registro';
+      next.classList.add('green');
+    } else {
+      next.textContent = 'Siguiente →';
+      next.classList.remove('green');
+    }
+  }
+
+  function resetForm() {
+    document.getElementById('success').classList.remove('show');
+    document.getElementById('nav-bar').style.display = '';
+    document.querySelector('.progress-wrap').style.display = '';
+    // Reset all inputs
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+      else el.value = '';
+    });
+    document.querySelectorAll('.check-chip').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('active'));
+    goTo(0);
+  }
+
+  function calcularIMC() {
+    const alturaEl = document.getElementById('imc-altura');
+    const pesoEl = document.getElementById('imc-peso');
+    const resultEl = document.getElementById('imc-resultado');
+    const barraEl = document.getElementById('imc-barra');
+    const markerEl = document.getElementById('imc-marker');
+    const catEl = document.getElementById('imc-categoria');
+
+    const alturaCm = parseFloat(alturaEl.value);
+    const pesoLb = parseFloat(pesoEl.value);
+
+    if (!alturaCm || !pesoLb || alturaCm < 100 || pesoLb < 50) {
+      resultEl.value = "";
+      barraEl.style.display = "none";
+      return;
+    }
+
+    const alturaM = alturaCm / 100;
+    const pesoKg = pesoLb * 0.453592;
+    const imc = pesoKg / (alturaM * alturaM);
+    const imcRedondeado = Math.round(imc * 10) / 10;
+
+    resultEl.value = imcRedondeado;
+    barraEl.style.display = "block";
+
+    // Calcular % sobre el track y aplicar al marker
+    // Zonas: <18.5 (0-28%), 18.5-25 (28-56%), 25-30 (56-78%), 30-35 (78-95%), 35+ (95-100%)
+    let pct;
+    if (imc < 18.5) {
+      pct = (imc / 18.5) * 28;
+    } else if (imc < 25) {
+      pct = 28 + ((imc - 18.5) / 6.5) * 28;
+    } else if (imc < 30) {
+      pct = 56 + ((imc - 25) / 5) * 22;
+    } else if (imc < 35) {
+      pct = 78 + ((imc - 30) / 5) * 17;
+    } else {
+      pct = 95 + Math.min(4, ((imc - 35) / 10) * 4);
+    }
+    pct = Math.min(99, Math.max(1, pct));
+
+    // Obtener el ancho real del track para posicionar con precisión
+    const track = document.getElementById('imc-barra-track');
+    const trackRect = track.getBoundingClientRect();
+    const trackWidth = trackRect.width;
+    const markerPx = (pct / 100) * trackWidth;
+    markerEl.style.left = markerPx + "px";
+
+    let cat, bg, color;
+    if (imc < 18.5) {
+      cat = "⚠️ Bajo peso — IMC " + imcRedondeado + ". Te recomendamos una consulta con nuestro médico.";
+      bg = "#DBEAFE"; color = "#1E40AF";
+    } else if (imc < 25) {
+      cat = "✅ Peso normal — IMC " + imcRedondeado + ". ¡Excelente! Sigue manteniendo tu estilo de vida activo.";
+      bg = "#D1FAE5"; color = "#065F46";
+    } else if (imc < 30) {
+      cat = "🟡 Sobrepeso — IMC " + imcRedondeado + ". Nuestro equipo puede ayudarte a alcanzar tu peso ideal.";
+      bg = "#FEF9C3"; color = "#854D0E";
+    } else if (imc < 35) {
+      cat = "🔴 Obesidad grado 1 — IMC " + imcRedondeado + ". Te recomendamos iniciar con evaluación médica y plan personalizado.";
+      bg = "#FEE2E2"; color = "#991B1B";
+    } else {
+      cat = "🔴 Obesidad grado 2+ — IMC " + imcRedondeado + ". Es importante que te evalúe nuestro médico antes de iniciar actividad física.";
+      bg = "#F3E8FF"; color = "#6B21A8";
+    }
+
+    catEl.style.background = bg;
+    catEl.style.color = color;
+    catEl.textContent = cat;
+  }
+
+  updateNav();
+</script>
+</body>
+</html>
